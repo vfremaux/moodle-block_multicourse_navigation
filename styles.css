@@ -1,0 +1,127 @@
+
+.node-course.other,
+.node-section-group.other {
+    opacity: 0.6;
+    -moz-opacity: 0.6;
+}
+
+.block.block_course_modulenavigation .node-course a,
+.block.block_course_modulenavigation .node-course.empty {
+    padding: 5px;
+    font-size: 1.2em;
+    color: #eee;
+    margin-bottom:2px;
+}
+
+.block.block_course_modulenavigation .node-course .node-name {
+    background-color: #444;
+}
+
+.block.block_course_modulenavigation .node-course .node-name.incomplete {
+    background-image: url([[pix:t/stop]]);
+    background-position: 98% 50%;
+    background-repeat: no-repeat;
+}
+
+.block.block_course_modulenavigation .node-course .node-name.complete {
+    background-image: url([[pix:t/go]]);
+    background-position: 98% 50%;
+    background-repeat: no-repeat;
+}
+
+.block.block_course_modulenavigation .node-section,
+.block.block_course_modulenavigation .node-section.empty {
+    padding-top: 3px;
+    font-size: 0.95em;
+    color: #000;
+    margin-bottom:2px;
+}
+
+.block.block_course_modulenavigation .node-section .node-name {
+    background-color: #ddd;
+}
+
+.block.block_course_modulenavigation .node-section .node-name.incomplete {
+    background-color: #e33;
+}
+
+.block.block_course_modulenavigation .node-section .node-name.complete {
+    background-color: #3e3;
+}
+
+.block.block_course_modulenavigation .node-section .node-name.incomplete.is-leaf {
+    background-image: url([[pix:t/stop]]);
+    background-position: 98% 50%;
+    background-repeat: no-repeat;
+    background-color: #ddd;
+}
+
+.block.block_course_modulenavigation .node-section .node-name.complete.is-leaf {
+    background-image: url([[pix:t/go]]);
+    background-position: 98% 50%;
+    background-repeat: no-repeat;
+    background-color: #ddd;
+}
+
+.block.block_course_modulenavigation .handle {
+    display: table-cell;
+    width: 5%;
+    min-width: 20px;
+}
+
+.block.block_course_modulenavigation .node-name {
+    display:table-cell;
+    width: 95%;
+    padding: 3px;
+}
+
+.node-course,
+.node-section {
+    line-height: 1.7em;
+}
+
+.block.block_course_modulenavigation ul.activities {
+    list-style: none;
+}
+
+.block.block_course_modulenavigation .activity .activityicon,
+.block.block_course_modulenavigation .activity .activityname,
+.block.block_course_modulenavigation .activity .completionbox {
+    display: table-cell;
+}
+
+.block.block_course_modulenavigation .activity .activityicon {
+    width: 1%;
+}
+.block.block_course_modulenavigation .activity .activityicon img {
+    height: 16px;
+    width: 16px;
+}
+
+.block.block_course_modulenavigation .activity .activityname {
+    width: 90%;
+    font-size:0.8em;
+    padding: 3px;
+}
+
+.block.block_course_modulenavigation .activity .completionbox {
+    width: 30px;
+}
+
+.block.block_course_modulenavigation .activity .completionbox .completioncheck.incomplete {
+    background-image: url([[pix:i/invalid]]);
+    background-position: 0% 100%;
+    background-repeat: no-repeat;
+    width: 30px;
+    display: inline-block;
+    height: 20px;
+}}
+
+.block.block_course_modulenavigation .activity .completionbox .completioncheck.complete {
+    background-image: url([[pix:i/checked]]);
+    background-position: 0% 100%;
+    background-repeat: no-repeat;
+    width: 30px;
+    display: inline-block;
+    height: 20px;
+}}

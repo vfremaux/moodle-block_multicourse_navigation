@@ -1,0 +1,68 @@
+{{!
+    This file is part of The Course Module Navigation Block
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block-multicourse_navigation/coursenave
+
+    Block template for navigation
+
+    The purpose of this template is render a navigation block in course contexts. This template renders all the visible sections in a course.
+
+    Classes required for JS:
+    * none
+
+    Context variables required for this template:
+    * sections Array of course sections containing arrays of modules
+    * modules Array of course modules
+}}
+<div class="node-section">
+    <div class="section-heading" id="node-section-{{sectionid}}-block-{{blockid}}">
+        <div class="handle">{{{handle}}}</div>
+        {{#showsectionlinks}}
+        <div class="section node-name {{complete}} {{leafclass}}">{{{indent}}} <a href="{{url}}" title="{{sectionfullname}}">{{sectionname}}</a></div>
+        {{/showsectionlinks}}
+        {{^showsectionlinks}}
+        <div class="section node-name {{complete}} {{leafclass}}" title="{{sectionfullname}}">{{{indent}}}{{sectionname}}</div>
+        {{/showsectionlinks}}
+    </div>
+    <div id="section-content-{{sectionid}}" class="section-content"  {{{initial}}}>
+    {{#hasmodules}}
+    <div class="section-body">
+        <ul class="activities">
+            {{#modules}}
+            <li class="activity">
+                <a href="{{{url}}}" class="{{active}} {{#label}}modulenavigationlabel{{/label}}">
+                    <div class="activityicon">{{{icon}}}</div>
+                    <div class="activityname">{{{name}}}</div>
+                    {{#completionon}}
+                    <div class="completionbox">
+                        <div class="completioncheck {{complete}}"></div>
+                    </div>
+                    {{/completionon}}
+                </a>
+            </li>
+            {{/modules}}
+        </ul>
+    </div>
+    {{/hasmodules}}
+    {{! Recursive subsection calls if any }}
+    {{#hassubs}}
+    {{#sections}}
+    {{> block_course_modulenavigation/section}}
+    {{/sections}}
+    {{/hassubs}}
+    </div>
+</div>

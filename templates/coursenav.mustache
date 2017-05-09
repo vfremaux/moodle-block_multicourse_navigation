@@ -1,0 +1,48 @@
+{{!
+    This file is part of The Course Module Navigation Block
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block-multicourse_navigation/coursenave
+
+    Block template for navigation
+
+    The purpose of this template is render a navigation block in course contexts. This template renders all the visible sections in a course.
+
+    Classes required for JS:
+    * none
+
+    Context variables required for this template:
+    * sections Array of course sections containing arrays of modules
+    * modules Array of course modules
+}}
+{{#courses}}
+<div class="node-course {{currentclass}}" id="node-course-{{courseid}}-block-{{blockid}}">
+    <div class="handle">{{{handle}}}</div>
+    <div class="course node-name {{complete}}">
+        {{#courseaccess}}
+        <a href="{{courseurl}}">{{coursename}}</a>
+        {{/courseaccess}}
+        {{^courseaccess}}
+        {{coursename}}
+        {{/courseaccess}}
+    </div>
+</div>
+<div class="course-content {{currentclass}}" id="course-content-{{courseid}}" {{{initial}}}>
+    {{#sections}}
+    {{> block_course_modulenavigation/section}}
+    {{/sections}}
+</div>
+{{/courses}}
