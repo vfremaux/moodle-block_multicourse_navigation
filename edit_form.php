@@ -53,11 +53,16 @@ class block_multicourse_navigation_edit_form extends block_edit_form {
         $mform->addElement('select', 'config_usecompletion', $title, $completionoptions);
         $mform->setDefault('config_usecompletion', 1);
 
-        $contractoptions = array(LTC_OPTIONAL_YES => get_string('allmarks', 'block_multicourse_navigation'),
-                                   LTC_OPTIONAL_NO => get_string('mandatoryonly', 'block_multicourse_navigation'));
+        $contractoptions = array(0 => get_string('allmarks', 'block_multicourse_navigation'),
+                                   1 => get_string('mandatoryonly', 'block_multicourse_navigation'));
         $title = get_string('config_ltccontract', 'block_multicourse_navigation');
         $mform->addElement('select', 'config_ltccontract', $title, $contractoptions);
         $mform->disabledIf('config_ltccontract', 'config_usecompletion', 'neq', 2);
+
+        // Adds a list of course ids to track in order.
+        $title = get_string('config_ignoremainsection', 'block_multicourse_navigation');
+        $mform->addElement('advcheckbox', 'config_ignoremainsection', $title);
+        $mform->setDefault('config_ignoremainsection', $config->defaultignoremainsection);
 
         // Adds a list of course ids to track in order.
         $title = get_string('config_showmodules', 'block_multicourse_navigation');

@@ -28,6 +28,7 @@
     * sections Array of course sections containing arrays of modules
     * modules Array of course modules
 }}
+<center>{{{collapseglobals}}}</center>
 {{#courses}}
 <div class="node-course {{currentclass}}" id="node-course-{{courseid}}-block-{{blockid}}">
     <div class="handle">{{{handle}}}</div>
@@ -40,9 +41,16 @@
         {{/courseaccess}}
     </div>
 </div>
+{{#courseaccess}}
 <div class="course-content {{currentclass}}" id="course-content-{{courseid}}" {{{initial}}}>
     {{#sections}}
-    {{> block_course_modulenavigation/section}}
+    {{> block_multicourse_navigation/section}}
     {{/sections}}
 </div>
+{{/courseaccess}}
+{{^courseaccess}}
+<div class="course-no-access">
+{{coursenoaccessmsg}}
+</div>
+{{/courseaccess}}
 {{/courses}}

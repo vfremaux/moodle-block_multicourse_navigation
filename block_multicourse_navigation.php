@@ -54,6 +54,11 @@ class block_multicourse_navigation extends block_base {
     protected $userstates;
 
     /**
+     * Marks from one or more attachable LTCs.
+     */
+    protected $marks;
+
+    /**
      * Initializes the block, called by the constructor
      */
     public function init() {
@@ -147,6 +152,7 @@ class block_multicourse_navigation extends block_base {
         $selected = optional_param('section', null, PARAM_INT);
         $intab = optional_param('dtab', null, PARAM_TEXT);
         $thiscontext = context::instance_by_id($this->page->context->id);
+        $coursecontext = context_course::instance($COURSE->id);
 
         $this->content = new stdClass();
         $this->content->footer = '';
@@ -229,24 +235,28 @@ class block_multicourse_navigation extends block_base {
                 $coursetpl->courseaccess = true;
             } else {
                 $coursetpl->courseaccess = false;
+                $coursetpl->coursenoaccessmsg = get_string('coursenoaccess', 'block_multicourse_navigation');
             }
 
             $this->modinfo = get_fast_modinfo($this->course);
 
             // Get course completion information from completion source.
             $coursetpl->completionon = 'off';
-            if (@$this->config->usecompletion == 1) {
-                $this->completioninfo = new completion_info($this->course);
-                if ($this->completioninfo->is_enabled()) {
-                    $coursetpl->completionon = 'completion';
-                }
-            } else if (@$this->config->usecompletion == 2) {
-                if (is_dir($CFG->dirroot.'/mod/learningtimeckeck')) {
-                    include_once($CFG->dirroot.'/mod/learningtimecheck/xlib.php');
-                    if (learningtimecheck_course_has_ltc_tracking($this->course->id)) {
-                        $this->marks = learningtimecheck_get_course_marks($this->course->id, $user->id);
+            if (!has_capability('moodle/grade:viewall', $coursecontext)) {
+                // Only for students.
+                if (@$this->config->usecompletion == 1) {
+                    $this->completioninfo = new completion_info($this->course);
+                    if ($this->completioninfo->is_enabled()) {
+                        $coursetpl->completionon = 'completion';
                     }
-                    $coursetpl->completionon = 'marks';
+                } else if (@$this->config->usecompletion == 2) {
+                    if (is_dir($CFG->dirroot.'/mod/learningtimecheck')) {
+                        include_once($CFG->dirroot.'/mod/learningtimecheck/xlib.php');
+                        if (learningtimecheck_course_has_ltc_tracking($this->course->id)) {
+                            $this->marks = learningtimecheck_get_course_marks($this->course->id, $USER->id, $this->config->ltccontract);
+                        }
+                        $coursetpl->completionon = 'marks';
+                    }
                 }
             }
 
@@ -266,6 +276,9 @@ class block_multicourse_navigation extends block_base {
                 $sectionnums[] = $section->section;
             }
             foreach ($sections as $section) {
+                if (!$section->visible) {
+                    continue;
+                }
                 if (($this->course->format == 'flexsections')) {
                     $params = array('courseid' => $this->course->id,
                                     'sectionid' => $section->id,
@@ -276,6 +289,11 @@ class block_multicourse_navigation extends block_base {
                         continue;
                     }
                 }
+
+                if (!empty($this->config->ignoremainsection) && ($section->section == 0)) {
+                    continue;
+                }
+
                 $sectiontpl = $this->make_section($section, $coursetpl);
                 if (!empty($sectiontpl)) {
                     $coursetpl->sections[] = $sectiontpl;
@@ -289,9 +307,20 @@ class block_multicourse_navigation extends block_base {
             $template->courses[] = $coursetpl;
         }
 
+        $collapsealliconurl = $OUTPUT->pix_url('collapseall', 'block_multicourse_navigation');
+        $expandalliconurl = $OUTPUT->pix_url('expandall', 'block_multicourse_navigation');
+        $hidemodulesiconurl = $OUTPUT->pix_url('hidemodules', 'block_multicourse_navigation');
+        $showmodulesiconurl = $OUTPUT->pix_url('showmodules', 'block_multicourse_navigation');
+        $controls = '<img class="multicourse-controls" id="multicourse-collapseall-'.$this->instance->id.'" src="'.$collapsealliconurl.'"> ';
+        $controls .= '<img class="multicourse-controls" id="multicourse-expandall-'.$this->instance->id.'" src="'.$expandalliconurl.'"> ';
+        if (!empty($this->config->showmodules)) {
+            $controls .= '<img class="multicourse-controls" id="multicourse-hidemodules-'.$this->instance->id.'" src="'.$hidemodulesiconurl.'"> ';
+            $controls .= '<img class="multicourse-controls" id="multicourse-showmodules-'.$this->instance->id.'" src="'.$showmodulesiconurl.'"> ';
+        }
+        $template->collapseglobals = $controls;
+
         $template->config = $this->config;
         $renderer = $this->page->get_renderer('block_multicourse_navigation', 'nav');
-        // print_object($template);
         $this->content->text = $renderer->render_nav($template);
 
         return $this->content;
@@ -303,6 +332,7 @@ class block_multicourse_navigation extends block_base {
      *
      */
     protected function make_section(&$section, &$coursetpl) {
+        global $COURSE, $PAGE;
         static $deepnesscontrol = 0;
         static $maxdeepness = 10;
 
@@ -337,14 +367,16 @@ class block_multicourse_navigation extends block_base {
         $sectiontpl->sectionid = $section->id;
         $sectiontpl->sectionname = shorten_text($name, 40);
         $sectiontpl->sectionfullname = $name;
-        $sectiontpl->indent = str_repeat('&nbsp;&nbsp;', $deepnesscontrol);
+        $sectiontpl->indent = 'indent-'.$deepnesscontrol;
         $sectionsection = $section->section;
         if ($sectionsection) {
             if ($this->config->showsectionlinks == 1) {
-                $sectiontpl->url = new moodle_url('/course/view.php', array('id' => $this->course->id), 'section-'.$sectionsection);
+                $sectiontpl->url = new moodle_url('/course/view.php', array('id' => $this->course->id, 'tosection' => $sectionsection), 'section-'.$sectionsection);
             } else {
-                $sectiontpl->url = $this->format->get_view_url($sectionsection);
+                $sectiontpl->url = new moodle_url('/course/view.php', array('id' => $this->course->id, 'section' => $sectionsection), 'section-'.$sectionsection);
             }
+        } else {
+            $sectiontpl->url = new moodle_url('/course/view.php', array('id' => $this->course->id));
         }
 
         if ($coursetpl->completionon != 'off') {
@@ -409,10 +441,10 @@ class block_multicourse_navigation extends block_base {
                         $completiondata = $this->completioninfo->get_data($module, true);
                         $hascompleted = 0 + in_array($completiondata->completionstate, $this->completionok);
                     } else {
-                        if (in_array($mod->cm->id, $this->marks)) {
+                        if (!empty($this->marks) && in_array($module->id, array_keys($this->marks))) {
                             $hascompletion = true;
                             $modtpl->complete = 'incomplete';
-                            $hascompleted = $this->marks[$mod->cm->id];
+                            $hascompleted = @$this->marks[$module->id];
                         } else {
                             // Skip module as not in mandatory part.
                             continue;
@@ -429,15 +461,12 @@ class block_multicourse_navigation extends block_base {
                             }
                             $modtpl->complete = 'complete';
                         } else {
-                            if ($sectiontpl->complete == 'assumedcomplete') {
-                                $sectiontpl->complete = 'incomplete';
-                            }
-                            if ($coursetpl->complete == 'assumedcomplete') {
-                                $coursetpl->complete = 'incomplete';
-                            }
+                            $sectiontpl->complete = 'incomplete';
+                            $coursetpl->complete = 'incomplete';
                         }
                     }
                 }
+
                 if (!empty($this->config->showmodules)) {
                     $sectiontpl->modules[] = $modtpl;
                 }
@@ -451,25 +480,46 @@ class block_multicourse_navigation extends block_base {
         $sectiontpl->leafclass = 'is-leaf';
         if ($this->course->format == 'flexsections' && $section->section > 0) {
 
+            $sectiontpl->customclass = '';
+            $sectiontpl->customstyle = '';
+
+            $flexrenderer = $PAGE->get_renderer('format_flexsections');
+            if (method_exists($flexrenderer, 'add_custom_style')) {
+                $attrs = array();
+                $flexrenderer->add_custom_style($attrs, $section);
+                if (!empty($attrs['class'])) {
+                    $sectiontpl->customclass = $attrs['class'];
+                }
+                if (!empty($attrs['style'])) {
+                    $sectiontpl->customstyle = $attrs['style'];
+                }
+            }
+
             $subs = $this->format->get_subsections($section);
             if (!empty($subs)) {
                 $sectiontpl->hassubs = 1;
                 $sectiontpl->leafclass = '';
+
                 foreach ($subs as $sub) {
+                    if (!$sub->visible) {
+                        continue;
+                    }
                     $subtpl = $this->make_section($sub, $coursetpl);
 
-                    // Report completion on the current level.
-                    if ($subtpl->complete == 'empty') {
-                        // No effect on current section state.
-                    } else if ($subtpl->complete != 'complete') {
-                        if ($sectiontpl->complete == 'assumedcomplete') {
+                    if ($coursetpl->completionon != 'off') {
+                        // Report completion on the current level.
+                        if ($subtpl->complete == 'empty') {
+                            // No effect on current section state.
+                        } else if ($subtpl->complete != 'complete') {
+                            if ($sectiontpl->complete == 'assumedcomplete') {
+                                    $sectiontpl->complete = 'incomplete';
+                            } else {
                                 $sectiontpl->complete = 'incomplete';
+                            }
                         } else {
-                            $sectiontpl->complete = 'incomplete';
-                        }
-                    } else {
-                        if ($sectiontpl->complete != 'incomplete') {
-                            $sectiontpl->complete = 'complete';
+                            if ($sectiontpl->complete != 'incomplete') {
+                                $sectiontpl->complete = 'complete';
+                            }
                         }
                     }
 
@@ -484,8 +534,10 @@ class block_multicourse_navigation extends block_base {
 
         $deepnesscontrol--;
 
-        if ($sectiontpl->complete == 'assumedcomplete') {
-            $sectiontpl->complete = 'empty';
+        if ($coursetpl->completionon != 'off') {
+            if ($sectiontpl->complete == 'assumedcomplete') {
+                $sectiontpl->complete = 'empty';
+            }
         }
 
         return $sectiontpl;
