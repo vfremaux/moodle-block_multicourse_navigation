@@ -49,4 +49,11 @@ if ($ADMIN->fulltree) {
     $default = 1;
     $settings->add(new admin_setting_configcheckbox($name, $title, $description, $default));
 
+    // Option: Ignore the General section 0 in display.
+    $name = 'block_multicourse_navigation/defaultignoremainsection';
+    $title = get_string('config_defaultignoremainsection', 'block_multicourse_navigation');
+    $description = get_string('config_defaultignoremainsection_desc', 'block_multicourse_navigation');
+    $default = 1;
+    $settings->add(new admin_setting_configcheckbox($name, $title, $description, $default));
+
 }

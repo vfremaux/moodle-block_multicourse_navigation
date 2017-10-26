@@ -29,40 +29,43 @@
     * modules Array of course modules
 }}
 <div class="node-section">
-    <div class="section-heading" id="node-section-{{sectionid}}-block-{{blockid}}">
+    <div class="section-heading" id="node-block-{{blockid}}-section-{{sectionid}}">
         <div class="handle">{{{handle}}}</div>
         {{#showsectionlinks}}
-        <div class="section node-name {{complete}} {{leafclass}}">{{{indent}}} <a href="{{url}}" title="{{sectionfullname}}">{{sectionname}}</a></div>
+        <div class="section node-name {{complete}} {{leafclass}} {{customclass}} {{{indent}}}" style="{{customstyle}}"> <a href="{{{url}}}" title="{{sectionfullname}}">{{sectionname}}</a></div>
         {{/showsectionlinks}}
         {{^showsectionlinks}}
-        <div class="section node-name {{complete}} {{leafclass}}" title="{{sectionfullname}}">{{{indent}}}{{sectionname}}</div>
+        <div class="section node-name {{complete}} {{leafclass}} {{customclass}}" title="{{sectionfullname}} {{{indent}}}" style="{{customstyle}}">{{sectionname}}</div>
         {{/showsectionlinks}}
+        {{#completionon}}
+        <div class="section node-completion {{complete}}"></div>
+        {{/completionon}}
     </div>
-    <div id="section-content-{{sectionid}}" class="section-content"  {{{initial}}}>
-    {{#hasmodules}}
-    <div class="section-body">
-        <ul class="activities">
-            {{#modules}}
-            <li class="activity">
-                <a href="{{{url}}}" class="{{active}} {{#label}}modulenavigationlabel{{/label}}">
-                    <div class="activityicon">{{{icon}}}</div>
-                    <div class="activityname">{{{name}}}</div>
-                    {{#completionon}}
-                    <div class="completionbox">
-                        <div class="completioncheck {{complete}}"></div>
-                    </div>
-                    {{/completionon}}
-                </a>
-            </li>
-            {{/modules}}
-        </ul>
-    </div>
-    {{/hasmodules}}
-    {{! Recursive subsection calls if any }}
-    {{#hassubs}}
-    {{#sections}}
-    {{> block_course_modulenavigation/section}}
-    {{/sections}}
-    {{/hassubs}}
+    <div id="section-content-{{sectionid}}" class="section-content block-{{blockid}}"  {{{initial}}}>
+        {{#hasmodules}}
+        <div class="section-body">
+            <ul class="activities">
+                {{#modules}}
+                <li class="activity">
+                    <a href="{{{url}}}" class="{{active}} {{#label}}modulenavigationlabel{{/label}}">
+                        <div class="activityicon">{{{icon}}}</div>
+                        <div class="activityname">{{{name}}}</div>
+                        {{#completionon}}
+                        <div class="completionbox">
+                            <div class="completioncheck {{complete}}"></div>
+                        </div>
+                        {{/completionon}}
+                    </a>
+                </li>
+                {{/modules}}
+            </ul>
+        </div>
+        {{/hasmodules}}
+        {{! Recursive subsection calls if any }}
+        {{#hassubs}}
+        {{#sections}}
+        {{> block_multicourse_navigation/section}}
+        {{/sections}}
+        {{/hassubs}}
     </div>
 </div>

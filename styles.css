@@ -5,71 +5,101 @@
     -moz-opacity: 0.6;
 }
 
-.block.block_course_modulenavigation .node-course a,
-.block.block_course_modulenavigation .node-course.empty {
+.block.block_multicourse_navigation .node-course a,
+.block.block_multicourse_navigation .node-course.empty {
     padding: 5px;
     font-size: 1.2em;
     color: #eee;
     margin-bottom:2px;
 }
 
-.block.block_course_modulenavigation .node-course .node-name {
+.block.block_multicourse_navigation .node-course .node-name {
     background-color: #444;
 }
 
-.block.block_course_modulenavigation .node-course .node-name.incomplete {
+.block.block_multicourse_navigation .node-course .node-name.incomplete {
     background-image: url([[pix:t/stop]]);
     background-position: 98% 50%;
     background-repeat: no-repeat;
 }
 
-.block.block_course_modulenavigation .node-course .node-name.complete {
+.block.block_multicourse_navigation .node-course .node-name.complete {
     background-image: url([[pix:t/go]]);
     background-position: 98% 50%;
     background-repeat: no-repeat;
 }
 
-.block.block_course_modulenavigation .node-section,
-.block.block_course_modulenavigation .node-section.empty {
+.block.block_multicourse_navigation .node-section,
+.block.block_multicourse_navigation .node-section.empty {
     padding-top: 3px;
     font-size: 0.95em;
     color: #000;
     margin-bottom:2px;
 }
 
-.block.block_course_modulenavigation .node-section .node-name {
+.block.block_multicourse_navigation .node-section .node-name {
     background-color: #ddd;
 }
 
-.block.block_course_modulenavigation .node-section .node-name.incomplete {
-    background-color: #e33;
+.block.block_multicourse_navigation .node-section .node-name.incomplete {
+    background: #ddd;
+    /*
+    background: -moz-linear-gradient(left, #ddd 0%, #ddd 60%, #e00 90%, #e00 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, #ddd), color-stop(60%, #ddd), color-stop(90%, #e00), color-stop(100%, #e00));
+    background: -webkit-linear-gradient(left, #ddd 0%, #ddd 60%, #e00 90%, #e00 100%);
+    background: -o-linear-gradient(left, #ddd 0%, #ddd 60%, #e00 90%, #e00 100%);
+    background: -ms-linear-gradient(left, #ddd 0%, #ddd 60%, #e00 90%, #e00 100%);
+    background: linear-gradient(to right, #ddd 0%, #ddd 60%, #e00 90%, #e00 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dddddd', endColorstr='#ee0000', GradientType=1 );
+*/
 }
 
-.block.block_course_modulenavigation .node-section .node-name.complete {
-    background-color: #3e3;
+.block.block_multicourse_navigation .node-section .node-name.complete {
+    background: #ddd;
+/*
+    background: -moz-linear-gradient(left, #ddd 0%, #ddd 60%, #00aa00 90%, #00aa00 100%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, #ddd), color-stop(60%, #ddd), color-stop(90%, #00aa00), color-stop(100%, #00aa00));
+    background: -webkit-linear-gradient(left, #ddd 0%, #ddd 60%, #00aa00 90%, #00aa00 100%);
+    background: -o-linear-gradient(left, #ddd 0%, #ddd 60%, #00aa00 90%, #00aa00 100%);
+    background: -ms-linear-gradient(left, #ddd 0%, #ddd 60%, #00aa00 90%, #00aa00 100%);
+    background: linear-gradient(to right, #ddd 0%, #ddd 60%, #00aa00 90%, #00aa00 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#dddddd', endColorstr='#00aa00', GradientType=1 );
+*/
 }
 
-.block.block_course_modulenavigation .node-section .node-name.incomplete.is-leaf {
+.block.block_multicourse_navigation .node-section .node-completion.incomplete.is-leaf,
+.block.block_multicourse_navigation .node-section .node-completion.incomplete {
     background-image: url([[pix:t/stop]]);
-    background-position: 98% 50%;
+    background-position: 50% 50%;
     background-repeat: no-repeat;
     background-color: #ddd;
+    width:30px;
+    min-width:30px;
+    display: table-cell;
 }
 
-.block.block_course_modulenavigation .node-section .node-name.complete.is-leaf {
+.block.block_multicourse_navigation .node-section .node-completion.complete.is-leaf,
+.block.block_multicourse_navigation .node-section .node-completion.complete {
     background-image: url([[pix:t/go]]);
-    background-position: 98% 50%;
+    background-position: 50% 50%;
     background-repeat: no-repeat;
     background-color: #ddd;
+    width:30px;
+    min-width:30px;
+    display: table-cell;
 }
 
-.block.block_course_modulenavigation .handle {
+.block.block_multicourse_navigation .handle {
     display: table-cell;
     width: 5%;
     min-width: 20px;
 }
 
-.block.block_course_modulenavigation .node-name {
+.block.block_multicourse_navigation .handle {
+    cursor: pointer;
+}
+
+.block.block_multicourse_navigation .node-name {
     display:table-cell;
     width: 95%;
     padding: 3px;
@@ -80,48 +110,102 @@
     line-height: 1.7em;
 }
 
-.block.block_course_modulenavigation ul.activities {
+.block.block_multicourse_navigation ul {
+    margin-right: 0;
+}
+
+.block.block_multicourse_navigation ul.activities {
     list-style: none;
 }
 
-.block.block_course_modulenavigation .activity .activityicon,
-.block.block_course_modulenavigation .activity .activityname,
-.block.block_course_modulenavigation .activity .completionbox {
+.block.block_multicourse_navigation .activity .activityicon,
+.block.block_multicourse_navigation .activity .activityname,
+.block.block_multicourse_navigation .activity .completionbox {
     display: table-cell;
 }
 
-.block.block_course_modulenavigation .activity .activityicon {
+.block.block_multicourse_navigation .activity .activityicon {
     width: 1%;
 }
-.block.block_course_modulenavigation .activity .activityicon img {
+
+.block.block_multicourse_navigation .activity .activityicon img {
     height: 16px;
     width: 16px;
 }
 
-.block.block_course_modulenavigation .activity .activityname {
+.block.block_multicourse_navigation .activity .activityname {
     width: 90%;
     font-size:0.8em;
     padding: 3px;
 }
 
-.block.block_course_modulenavigation .activity .completionbox {
+.block.block_multicourse_navigation .activity .completionbox {
     width: 30px;
 }
 
-.block.block_course_modulenavigation .activity .completionbox .completioncheck.incomplete {
+.block.block_multicourse_navigation .activity .completionbox .completioncheck.incomplete {
     background-image: url([[pix:i/invalid]]);
-    background-position: 0% 100%;
+    background-position: 50% 100%;
     background-repeat: no-repeat;
     width: 30px;
     display: inline-block;
     height: 20px;
-}}
+}
 
-.block.block_course_modulenavigation .activity .completionbox .completioncheck.complete {
+.block.block_multicourse_navigation .activity .completionbox .completioncheck.complete {
     background-image: url([[pix:i/checked]]);
-    background-position: 0% 100%;
+    background-position: 50% 100%;
     background-repeat: no-repeat;
     width: 30px;
     display: inline-block;
     height: 20px;
-}}
+}
+
+.block.block_multicourse_navigation .activity .completionbox .completioncheck.optional {
+    background-image: url([[pix:optional|block_multicourse_navigation]]);
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
+    width: 30px;
+    display: inline-block;
+    height: 20px;
+}
+
+.block.block_multicourse_navigation .activity .completionbox .completioncheck.mandatory {
+    background-image: url([[pix:mandatory|block_multicourse_navigation]]);
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
+    width: 30px;
+    display: inline-block;
+    height: 20px;
+}
+
+.block.block_multicourse_navigation .node-section .indent-1 {
+    padding-left:8px;
+}
+
+.block.block_multicourse_navigation .node-section .indent-2 {
+    padding-left:16px;
+}
+
+.block.block_multicourse_navigation .node-section .indent-3 {
+    padding-left:24px;
+}
+
+.block.block_multicourse_navigation .node-section .indent-4 {
+    padding-left:32px;
+}
+
+.block.block_multicourse_navigation .node-section .indent-5 {
+    padding-left:40px;
+}
+
+.block.block_multicourse_navigation .node-section .indent-6 {
+    padding-left:48px;
+}
+
+.multicourse-controls {
+    margin: 5px 2px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
