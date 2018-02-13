@@ -177,11 +177,11 @@ class block_multicourse_navigation extends block_base {
 
         $this->completionok = array(COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS);
 
-        $this->hicons['collapsed'] = $OUTPUT->pix_url('collapsed', 'block_multicourse_navigation');
-        $this->hicons['expanded'] = $OUTPUT->pix_url('expanded', 'block_multicourse_navigation');
-        $this->hicons['collapsednosubs'] = $OUTPUT->pix_url('collapsed_nosubs', 'block_multicourse_navigation');
-        $this->hicons['expandednosubs'] = $OUTPUT->pix_url('expanded_nosubs', 'block_multicourse_navigation');
-        $this->hicons['default'] = $OUTPUT->pix_url('leaf', 'block_multicourse_navigation');
+        $this->hicons['collapsed'] = $OUTPUT->image_url('collapsed', 'block_multicourse_navigation');
+        $this->hicons['expanded'] = $OUTPUT->image_url('expanded', 'block_multicourse_navigation');
+        $this->hicons['collapsednosubs'] = $OUTPUT->image_url('collapsed_nosubs', 'block_multicourse_navigation');
+        $this->hicons['expandednosubs'] = $OUTPUT->image_url('expanded_nosubs', 'block_multicourse_navigation');
+        $this->hicons['default'] = $OUTPUT->image_url('leaf', 'block_multicourse_navigation');
 
         foreach ($courses as $courseid) {
 
@@ -307,10 +307,10 @@ class block_multicourse_navigation extends block_base {
             $template->courses[] = $coursetpl;
         }
 
-        $collapsealliconurl = $OUTPUT->pix_url('collapseall', 'block_multicourse_navigation');
-        $expandalliconurl = $OUTPUT->pix_url('expandall', 'block_multicourse_navigation');
-        $hidemodulesiconurl = $OUTPUT->pix_url('hidemodules', 'block_multicourse_navigation');
-        $showmodulesiconurl = $OUTPUT->pix_url('showmodules', 'block_multicourse_navigation');
+        $collapsealliconurl = $OUTPUT->image_url('collapseall', 'block_multicourse_navigation');
+        $expandalliconurl = $OUTPUT->image_url('expandall', 'block_multicourse_navigation');
+        $hidemodulesiconurl = $OUTPUT->image_url('hidemodules', 'block_multicourse_navigation');
+        $showmodulesiconurl = $OUTPUT->image_url('showmodules', 'block_multicourse_navigation');
         $controls = '<img class="multicourse-controls" id="multicourse-collapseall-'.$this->instance->id.'" src="'.$collapsealliconurl.'"> ';
         $controls .= '<img class="multicourse-controls" id="multicourse-expandall-'.$this->instance->id.'" src="'.$expandalliconurl.'"> ';
         if (!empty($this->config->showmodules)) {
@@ -497,13 +497,15 @@ class block_multicourse_navigation extends block_base {
 
             $subs = $this->format->get_subsections($section);
             if (!empty($subs)) {
-                $sectiontpl->hassubs = 1;
+                $sectiontpl->hassubs = 0;
                 $sectiontpl->leafclass = '';
 
                 foreach ($subs as $sub) {
                     if (!$sub->visible) {
                         continue;
                     }
+
+                    $sectiontpl->hassubs = 1;
                     $subtpl = $this->make_section($sub, $coursetpl);
 
                     if ($coursetpl->completionon != 'off') {

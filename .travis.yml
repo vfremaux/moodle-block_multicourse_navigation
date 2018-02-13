@@ -7,12 +7,11 @@ cache:
     - $HOME/.composer/cache
 
 php:
- - 5.6
  - 7.0
 
 env:
  global:
-  - MOODLE_BRANCH=MOODLE_33_STABLE
+  - MOODLE_BRANCH=MOODLE_34_STABLE
   - IGNORE_PATHS=amd/build,amd/src/bootstrap.js
   - IGNORE_NAMES=*.txt,moodle.css,moodle-rtl.css,moodle_min.css,editor.css,editor_min.css
  matrix:
