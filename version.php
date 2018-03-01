@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version    = 2017050900;
-$plugin->requires   = 20170505000; // Moodle 3.3 and above.
+$plugin->requires   = 2017050500; // Moodle 3.3 and above.
 $plugin->component  = 'block_multicourse_navigation';
 $plugin->maturity   = MATURITY_STABLE;
 $plugin->release    = '3.3.0 (Build 2017050900)';
