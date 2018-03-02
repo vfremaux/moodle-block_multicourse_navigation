@@ -497,13 +497,15 @@ class block_multicourse_navigation extends block_base {
 
             $subs = $this->format->get_subsections($section);
             if (!empty($subs)) {
-                $sectiontpl->hassubs = 1;
+                $sectiontpl->hassubs = 0;
                 $sectiontpl->leafclass = '';
 
                 foreach ($subs as $sub) {
                     if (!$sub->visible) {
                         continue;
                     }
+
+                    $sectiontpl->hassubs = 1;
                     $subtpl = $this->make_section($sub, $coursetpl);
 
                     if ($coursetpl->completionon != 'off') {
