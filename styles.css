@@ -15,6 +15,7 @@
 
 .block.block_multicourse_navigation .node-course .node-name {
     background-color: #444;
+    color: #fff;
 }
 
 .block.block_multicourse_navigation .node-course .node-name.incomplete {
@@ -208,4 +209,11 @@
     width: 16px;
     height: 16px;
     cursor: pointer;
+}
+
+.multicourse-navigation-dimmed {
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; // IE8
+    filter: alpha(opacity=50); // IE 5-7
+    -moz-opacity: 0.5;
+    opacity: 0.5;
 }

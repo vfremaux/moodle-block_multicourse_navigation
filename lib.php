@@ -1,5 +1,5 @@
 <?php
-// This file is part of The Course Module Navigation Block
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -15,20 +15,19 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details.
- *
- * @package     block_multicourse_navigation
- * @copyright   2016 onwards Valery Fremaux <http://docs.activeprolearn.com/en>
- * @author      Valery Fremaux <valery.fremaux@gmail.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    block_multicourse_navigation
+ * @category   blocks
+ * @author     Valery Fremaux (valery.fremaux@gmail.com)
+ * @author     Wafa Adhams (admin@adham.ps)
+ * @copyright  2010 Valery Fremaux (valery.fremaux@gmail.com)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version    = 2017050900;
-$plugin->requires   = 2018112800; // Moodle 3.4 and above.
-$plugin->component  = 'block_multicourse_navigation';
-$plugin->maturity   = MATURITY_STABLE;
-$plugin->release    = '3.6.0 (Build 2017050900)';
-
-// Non moodle attributes.
-$plugin->codeincrement = '3.6.0000';
+/**
+ * This function is not implemented in this plugin, but is needed to mark
+ * the vf documentation custom volume availability.
+ */
+function block_multicourse_navigation_supports_feature($feature) {
+    assert(1);
+}
