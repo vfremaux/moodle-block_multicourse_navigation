@@ -344,7 +344,7 @@ class block_multicourse_navigation extends block_base {
     protected function make_section(&$section, &$coursetpl) {
         global $COURSE, $PAGE;
         static $deepnesscontrol = 0;
-        static $maxdeepness = 30;
+        static $maxdeepness = 200;
 
         @$deepnesscontrol++;
         if ($deepnesscontrol > $maxdeepness) {

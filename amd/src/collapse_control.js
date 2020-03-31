@@ -23,14 +23,9 @@
 // jshint unused: true, undef:true
 define(['jquery', 'core/config', 'core/log'], function($, config, log) {
 
-    var currentcourseid;
+    var multicoursenavigation = {
 
-    /**
-     * SectionControl class.
-     *
-     * @param {String} selector The selector for the page region containing the actions panel.
-     */
-    return {
+        currentcourseid: 0,
 
         init: function(args) {
 
@@ -44,7 +39,7 @@ define(['jquery', 'core/config', 'core/log'], function($, config, log) {
             // Attach global controls to the block
             $('.multicourse-controls').on('click', this.processglobal);
 
-            currentcourseid = args;
+            multicoursenavigation.currentcourseid = args;
         },
 
         processglobal: function(e) {
@@ -52,12 +47,12 @@ define(['jquery', 'core/config', 'core/log'], function($, config, log) {
             e.preventDefault();
             var that = $(this);
 
-            regex = /multicourse-([a-z]+)-(\d+)/;
-            matchs = regex.exec(that.attr('id'));
-            what = matchs[1];
-            blockid = matchs[2];
+            var regex = /multicourse-([a-z]+)-(\d+)/;
+            var matchs = regex.exec(that.attr('id'));
+            var what = matchs[1];
+            var blockid = matchs[2];
 
-            url = config.wwwroot + '/blocks/multicourse_navigation/ajax/service.php?';
+            var url = config.wwwroot + '/blocks/multicourse_navigation/ajax/service.php?';
             url += 'blockid=' + blockid;
             url += '&what=' + what;
 
@@ -92,25 +87,26 @@ define(['jquery', 'core/config', 'core/log'], function($, config, log) {
             e.preventDefault();
             var that = $(this);
 
-            regex = /node-course-([0-9]+)-block-([0-9]+)/;
-            log.debug('Courseid ' + currentcourseid);
+            var regex = /node-course-([0-9]+)-block-([0-9]+)/;
+            log.debug('Courseid ' + multicoursenavigation.currentcourseid);
             log.debug('Elm ' + that.parent().attr('id'));
-            matchs = regex.exec(that.parent().attr('id'));
+            var matchs = regex.exec(that.parent().attr('id'));
             if (!matchs) {
                 return;
             }
-            courseid = parseInt(matchs[1]);
-            blockid = parseInt(matchs[2]);
+            var courseid = parseInt(matchs[1]);
+            var blockid = parseInt(matchs[2]);
+            var hide;
 
             log.debug('Working for block ' + blockid + ' in course ' + courseid);
 
-            url = config.wwwroot + '/blocks/multicourse_navigation/ajax/stateregister.php?';
-            url += 'id=' + currentcourseid;
+            var url = config.wwwroot + '/blocks/multicourse_navigation/ajax/stateregister.php?';
+            url += 'id=' + multicoursenavigation.currentcourseid;
             url += '&item=course';
             url += '&itemid=' + courseid;
             url += '&blockid=' + blockid;
 
-            handlesrc = $('#node-course-' + courseid + '-block-' + blockid + ' .handle > img').attr('src');
+            var handlesrc = $('#node-course-' + courseid + '-block-' + blockid + ' .handle > img').attr('src');
 
             if ($('#course-content-' + courseid).css('visibility') === 'visible') {
                 $('#course-content-' + courseid).css('visibility', 'hidden');
@@ -128,7 +124,7 @@ define(['jquery', 'core/config', 'core/log'], function($, config, log) {
 
             url += '&hide=' + hide;
 
-            $.get(url, function(data) {
+            $.get(url, function() {
             });
 
             return false;
@@ -139,26 +135,27 @@ define(['jquery', 'core/config', 'core/log'], function($, config, log) {
             e.stopPropagation();
             e.preventDefault();
             var that = $(this);
+            var hide;
 
-            regex = /node-block-([0-9]+)-section-([0-9]+)/;
-            log.debug('Courseid ' + currentcourseid);
+            var regex = /node-block-([0-9]+)-section-([0-9]+)/;
+            log.debug('Courseid ' + multicoursenavigation.currentcourseid);
             log.debug('Elm ' + that.parent().attr('id'));
-            matchs = regex.exec(that.parent().attr('id'));
+            var matchs = regex.exec(that.parent().attr('id'));
             if (!matchs) {
                 return;
             }
-            blockid = parseInt(matchs[1]);
-            sectionid = parseInt(matchs[2]);
+            var blockid = parseInt(matchs[1]);
+            var sectionid = parseInt(matchs[2]);
 
             log.debug('Working for block ' + blockid + ' and section ' + sectionid);
 
-            url = config.wwwroot + '/blocks/multicourse_navigation/ajax/stateregister.php?';
-            url += 'id=' + currentcourseid;
+            var url = config.wwwroot + '/blocks/multicourse_navigation/ajax/stateregister.php?';
+            url += 'id=' + multicoursenavigation.currentcourseid;
             url += '&item=section';
             url += '&itemid=' + sectionid;
             url += '&blockid=' + blockid;
 
-            handlesrc = $('#node-block-' + blockid + '-section-' + sectionid + ' .handle > img').attr('src');
+            var handlesrc = $('#node-block-' + blockid + '-section-' + sectionid + ' .handle > img').attr('src');
 
             if ($('#section-content-' + sectionid).css('visibility') === 'visible') {
                 $('#section-content-' + sectionid).css('visibility', 'hidden');
@@ -176,11 +173,13 @@ define(['jquery', 'core/config', 'core/log'], function($, config, log) {
 
             url += '&hide=' + hide;
 
-            $.get(url, function(data) {
+            $.get(url, function() {
             });
 
             return false;
         }
-    }
+    };
+
+    return multicoursenavigation;
 
 });
