@@ -25,10 +25,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->version    = 2017050900;
-$plugin->requires   = 2018042700; // Moodle 3.4 and above.
+$plugin->requires   = 2019051100; // Moodle 3.4 and above.
 $plugin->component  = 'block_multicourse_navigation';
 $plugin->maturity   = MATURITY_STABLE;
-$plugin->release    = '3.5.0 (Build 2017050900)';
+$plugin->release    = '3.7.0 (Build 2017050900)';
 
 // Non moodle attributes.
-$plugin->codeincrement = '3.5.0000';
+$plugin->codeincrement = '3.7.0000';

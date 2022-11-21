@@ -27,9 +27,13 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['multicourse_navigation:addinstance'] = 'Ajouter un nouveau bloc de sommaire du cours';
 
+// Privacy.
+$string['privacy:metadata'] = 'Le bloc Navigation Multicours ne détient directement aucune donnée relative aux utilisateurs.';
+
 $string['allmarks'] = 'Toutes les marques';
 $string['anchortosection'] = 'Ancre de section';
 $string['collapsed'] = 'Ouvrir';
+$string['courseisgone'] = 'Un des cours suivis par ce bloc a disparu, soit qu\'il ait été supprimé, soit qu\'il n\'ait pas été restauré à côté de ce cours.';
 $string['completion'] = 'Achèvement standard';
 $string['config_blocktitle'] = 'Titre du bloc';
 $string['config_blocktitle_default'] = 'Sommaire';
@@ -51,7 +55,7 @@ $string['expanded'] = 'Fermer';
 $string['learningtimecheck'] = 'Marques de temps pédagogiques (LTC)';
 $string['mandatoryonly'] = 'Les marques obligatoires uniquement';
 $string['nocompletion'] = 'Pas d\'achèvement';
-$string['notusingsections'] = 'Ce format de cours n&rsquo;utilise pas de section.';
+$string['notusingsections'] = 'Ce cours ({$a}) n&rsquo;utilise pas de sections.';
 $string['onesectionview'] = 'Vue section unique';
 $string['pluginname'] = 'Sommaire multi-cours';
 

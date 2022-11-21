@@ -30,6 +30,12 @@
 }}
 <center>{{{collapseglobals}}}</center>
 {{#courses}}
+{{#courseisgone}}
+   <div class="error">
+   {{#str}}courseisgone, block_multicourse_navigation{{/str}}
+   </div>
+{{/courseisgone}}
+{{^courseisgone}}
 <div class="node-course {{currentclass}}" id="node-course-{{courseid}}-block-{{blockid}}">
     <div class="handle">{{{handle}}}</div>
     <div class="course node-name {{complete}}">
@@ -53,4 +59,5 @@
 {{coursenoaccessmsg}}
 </div>
 {{/courseaccess}}
+{{/courseisgone}}
 {{/courses}}

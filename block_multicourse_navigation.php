@@ -185,11 +185,18 @@ class block_multicourse_navigation extends block_base {
 
         foreach ($courses as $courseid) {
 
+            if (!$DB->record_exists('course', array('id' => $courseid))) {
+                $coursetpl = new StdClass;
+                $coursetpl->courseisgone = true;
+                $template->courses[] = $coursetpl;
+                continue;
+            }
+
             $this->format = course_get_format($courseid);
 
             if (!$this->format->uses_sections()) {
-                if (debugging()) {
-                    $this->content->text .= '<div>'.get_string('notusingsections', 'block_multicourse_navigation').'</div>';
+                if ($CFG->debug >= DEBUG_ALL) {
+                    $this->content->text .= $OUTPUT->notification(get_string('notusingsections', 'block_multicourse_navigation', $courseid));
                 }
                 continue;
             }
@@ -208,6 +215,7 @@ class block_multicourse_navigation extends block_base {
             $coursetpl = new StdClass;
             $coursetpl->coursename = format_string($this->course->fullname);
             $coursetpl->courseid = $this->course->id;
+            $coursetpl->hassubs = 0;
 
             // This is just the initial default state at loading.
             if ($COURSE->id == $this->course->id) {
@@ -266,17 +274,19 @@ class block_multicourse_navigation extends block_base {
                 $coursetpl->complete = '';
             }
 
+            /*
             if ($thiscontext->get_level_name() == get_string('activitymodule')) {
                 // Display nothing.
                 return $this->content;
             }
+            */
 
             $sectionnums = array();
             foreach ($sections as $section) {
                 $sectionnums[] = $section->section;
             }
             foreach ($sections as $section) {
-                if (!$section->visible) {
+                if (!$section->visible && !has_capability('moodle/course:viewhiddensections', $coursecontext)) {
                     continue;
                 }
                 if (($this->course->format == 'flexsections')) {
@@ -295,6 +305,13 @@ class block_multicourse_navigation extends block_base {
                 }
 
                 $sectiontpl = $this->make_section($section, $coursetpl);
+                if (!$sectiontpl) {
+                    continue;
+                }
+                $sectiontpl->ishidden = false;
+                if (!$section->visible) {
+                    $sectiontpl->ishidden = true;
+                }
                 if (!empty($sectiontpl)) {
                     $coursetpl->sections[] = $sectiontpl;
                 }
@@ -334,7 +351,7 @@ class block_multicourse_navigation extends block_base {
     protected function make_section(&$section, &$coursetpl) {
         global $COURSE, $PAGE;
         static $deepnesscontrol = 0;
-        static $maxdeepness = 10;
+        static $maxdeepness = 200;
 
         @$deepnesscontrol++;
         if ($deepnesscontrol > $maxdeepness) {
@@ -345,12 +362,17 @@ class block_multicourse_navigation extends block_base {
 
         if ($this->course->format != 'flexsections') {
             if ($i > @$this->course->numsections) {
+                $deepnesscontrol--;
                 return;
             }
         }
 
+        $coursecontext = context_course::instance($COURSE->id);
         if (($i > 0) && !$section->uservisible) {
-            return;
+            if (!has_capability('moodle/course:viewhiddensections', $coursecontext)) {
+                $deepnesscontrol--;
+                return;
+            }
         }
 
         if (!empty($section->name)) {
@@ -368,12 +390,20 @@ class block_multicourse_navigation extends block_base {
         $sectiontpl->sectionname = shorten_text($name, 40);
         $sectiontpl->sectionfullname = $name;
         $sectiontpl->indent = 'indent-'.$deepnesscontrol;
+
+        $sectiontpl->ishidden = false;
+        if (!$section->uservisible) {
+            $sectiontpl->ishidden = true;
+        }
+
         $sectionsection = $section->section;
         if ($sectionsection) {
             if ($this->config->showsectionlinks == 1) {
-                $sectiontpl->url = new moodle_url('/course/view.php', array('id' => $this->course->id, 'tosection' => $sectionsection), 'section-'.$sectionsection);
+                $params = array('id' => $this->course->id, 'tosection' => $sectionsection);
+                $sectiontpl->url = new moodle_url('/course/view.php', $params, 'section-'.$sectionsection);
             } else {
-                $sectiontpl->url = new moodle_url('/course/view.php', array('id' => $this->course->id, 'section' => $sectionsection), 'section-'.$sectionsection);
+                $params = array('id' => $this->course->id, 'section' => $sectionsection);
+                $sectiontpl->url = new moodle_url('/course/view.php', $params, 'section-'.$sectionsection);
             }
         } else {
             $sectiontpl->url = new moodle_url('/course/view.php', array('id' => $this->course->id));
@@ -419,7 +449,7 @@ class block_multicourse_navigation extends block_base {
                     continue;
                 }
 
-                if (! $module->uservisible) {
+                if (!$module->uservisible && !has_capability('moodle/course:viewhiddenactivities', $coursecontext)) {
                     continue;
                 }
 
@@ -496,36 +526,42 @@ class block_multicourse_navigation extends block_base {
             }
 
             $subs = $this->format->get_subsections($section);
+            $sectiontpl->sections = false;
             if (!empty($subs)) {
-                $sectiontpl->hassubs = 0;
                 $sectiontpl->leafclass = '';
 
                 foreach ($subs as $sub) {
-                    if (!$sub->visible) {
+                    if (!$sub->visible && !has_capability('moodle/course:viewhiddensections', $coursecontext)) {
                         continue;
                     }
 
                     $sectiontpl->hassubs = 1;
                     $subtpl = $this->make_section($sub, $coursetpl);
 
-                    if ($coursetpl->completionon != 'off') {
-                        // Report completion on the current level.
-                        if ($subtpl->complete == 'empty') {
-                            // No effect on current section state.
-                        } else if ($subtpl->complete != 'complete') {
-                            if ($sectiontpl->complete == 'assumedcomplete') {
+                    if ($subtpl) {
+                        $subtpl->ishidden = false;
+                        if (!$sub->visible) {
+                            $subtpl->ishidden = true;
+                        }
+                        if ($coursetpl->completionon != 'off') {
+                            // Report completion on the current level.
+                            if ($subtpl->complete == 'empty') {
+                                // No effect on current section state.
+                            } else if ($subtpl->complete != 'complete') {
+                                if ($sectiontpl->complete == 'assumedcomplete') {
+                                        $sectiontpl->complete = 'incomplete';
+                                } else {
                                     $sectiontpl->complete = 'incomplete';
+                                }
                             } else {
-                                $sectiontpl->complete = 'incomplete';
-                            }
-                        } else {
-                            if ($sectiontpl->complete != 'incomplete') {
-                                $sectiontpl->complete = 'complete';
+                                if ($sectiontpl->complete != 'incomplete') {
+                                    $sectiontpl->complete = 'complete';
+                                }
                             }
                         }
-                    }
 
-                    $sectiontpl->sections[] = $subtpl;
+                        $sectiontpl->sections[] = $subtpl;
+                    }
                 }
 
                 // If has subs, overrides handle icon to reflect complete content.

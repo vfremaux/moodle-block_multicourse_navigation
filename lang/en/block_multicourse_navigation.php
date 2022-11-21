@@ -25,9 +25,13 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['multicourse_navigation:addinstance'] = 'Add a new course contents block';
 
+// Privacy
+$string['privacy:metadata'] = 'The Multicourse Navigation block does not directly store any personal data about any user.';
+
 $string['allmarks'] = 'All marks';
 $string['anchortosection'] = 'Anchor to section';
 $string['collapsed'] = 'Open';
+$string['courseisgone'] = 'One of the tracked course is gone away, either it has been deleted or lost by a partial restore transfer.';
 $string['completion'] = 'Standard completion';
 $string['config_blocktitle'] = 'Block title';
 $string['config_blocktitle_default'] = 'Course Program Content';
@@ -51,7 +55,7 @@ $string['expanded'] = 'Close';
 $string['learningtimecheck'] = 'Learning Time Checks';
 $string['mandatoryonly'] = 'Mandatory marks only';
 $string['nocompletion'] = 'None';
-$string['notusingsections'] = 'This course format does not use sections.';
+$string['notusingsections'] = 'This course ({$a}) does not use sections.';
 $string['onesectionview'] = 'One section view';
 $string['pluginname'] = 'Multi-Course Summary';
 
